@@ -2,6 +2,7 @@
   "expo": {
     "name": "fuel-core",
     "slug": "fuel-core",
+    "owner":"folayimi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
