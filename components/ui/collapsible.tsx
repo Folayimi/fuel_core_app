@@ -1,45 +1,105 @@
-import { PropsWithChildren, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { cn } from "@/lib/utils"
+import * as React from "react"
+import { Text, TouchableOpacity, View } from "react-native"
+import tw from "twrnc"
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const theme = useColorScheme() ?? 'light';
-
-  return (
-    <ThemedView>
-      <TouchableOpacity
-        style={styles.heading}
-        onPress={() => setIsOpen((value) => !value)}
-        activeOpacity={0.8}>
-        <IconSymbol
-          name="chevron.right"
-          size={18}
-          weight="medium"
-          color={theme === 'light' ? Colors.light.icon : Colors.dark.icon}
-          style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }] }}
-        />
-
-        <ThemedText type="defaultSemiBold">{title}</ThemedText>
-      </TouchableOpacity>
-      {isOpen && <ThemedView style={styles.content}>{children}</ThemedView>}
-    </ThemedView>
-  );
+export interface CollapsibleProps {
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  children: React.ReactNode
+  className?: string
 }
 
-const styles = StyleSheet.create({
-  heading: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  content: {
-    marginTop: 6,
-    marginLeft: 24,
-  },
-});
+export interface CollapsibleTriggerProps {
+  children: React.ReactNode
+  className?: string
+}
+
+export interface CollapsibleContentProps {
+  children: React.ReactNode
+  className?: string
+}
+
+const CollapsibleContext = React.createContext<{
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}>({
+  open: false,
+  onOpenChange: () => {},
+})
+
+const Collapsible = React.forwardRef<
+  React.ElementRef<typeof View>,
+  CollapsibleProps
+>(({ className, open = false, onOpenChange, children, ...props }, ref) => {
+  const [internalOpen, setInternalOpen] = React.useState(open)
+  const isOpen = open !== undefined ? open : internalOpen
+  
+  const handleOpenChange = (newOpen: boolean) => {
+    if (open === undefined) {
+      setInternalOpen(newOpen)
+    }
+    onOpenChange?.(newOpen)
+  }
+
+  return (
+    <CollapsibleContext.Provider value={{ open: isOpen, onOpenChange: handleOpenChange }}>
+      <View
+        ref={ref}
+        style={tw`${cn("w-full", className)}`}
+        {...props}
+      >
+        {children}
+      </View>
+    </CollapsibleContext.Provider>
+  )
+})
+Collapsible.displayName = "Collapsible"
+
+const CollapsibleTrigger = React.forwardRef<
+  React.ElementRef<typeof TouchableOpacity>,
+  CollapsibleTriggerProps
+>(({ className, children, ...props }, ref) => {
+  const { open, onOpenChange } = React.useContext(CollapsibleContext)
+
+  return (
+    <TouchableOpacity
+      ref={ref}
+      style={tw`${cn("flex-row items-center justify-between py-4", className)}`}
+      onPress={() => onOpenChange(!open)}
+      activeOpacity={0.7}
+      {...props}
+    >
+      {children}
+      <Text style={tw`text-lg`}>
+        {open ? "−" : "+"}
+      </Text>
+    </TouchableOpacity>
+  )
+})
+CollapsibleTrigger.displayName = "CollapsibleTrigger"
+
+const CollapsibleContent = React.forwardRef<
+  React.ElementRef<typeof View>,
+  CollapsibleContentProps
+>(({ className, children, ...props }, ref) => {
+  const { open } = React.useContext(CollapsibleContext)
+
+  if (!open) {
+    return null
+  }
+
+  return (
+    <View
+      ref={ref}
+      style={tw`${cn("pb-4", className)}`}
+      {...props}
+    >
+      {children}
+    </View>
+  )
+})
+CollapsibleContent.displayName = "CollapsibleContent"
+
+export { Collapsible, CollapsibleContent, CollapsibleTrigger }
+
