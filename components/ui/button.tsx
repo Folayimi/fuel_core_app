@@ -9,7 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-blue-600",
+        default: "bg-[#21C45D]",
         destructive: "bg-red-600",
         outline: "border border-gray-300 bg-transparent",
         secondary: "bg-gray-200",
@@ -39,7 +39,7 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<React.ElementRef<typeof TouchableOpacity>, ButtonProps>(
-  ({ className, variant, size, children, loading = false, disabled = false, ...props }, ref) => {
+  ({ className, variant, size, textSize='sm', children, loading = false, disabled = false, ...props }, ref) => {
     const isDisabled = disabled || loading
     
     const getTextColor = () => {
@@ -75,7 +75,7 @@ const Button = React.forwardRef<React.ElementRef<typeof TouchableOpacity>, Butto
             color={variant === "outline" || variant === "ghost" || variant === "link" ? "#374151" : "white"} 
           />
         ) : (
-          <Text style={tw`${cn("text-sm font-medium", getTextColor())}`}>
+          <Text style={tw`${cn(`text-[${textSize}] font-medium`,getTextColor())}`}>
             {children}
           </Text>
         )}

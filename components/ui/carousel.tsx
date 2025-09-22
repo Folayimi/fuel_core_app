@@ -5,6 +5,7 @@ import CarouselLib from "react-native-reanimated-carousel"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import tw from 'twrnc'
 
 const { width } = Dimensions.get("window")
 
@@ -63,7 +64,7 @@ const Carousel = ({
         canScrollNext: currentIndex < data.length - 1,
       }}
     >
-      <View className={cn("relative", className)}>
+      <View style={tw`${cn("relative", className)}`}>
         <CarouselLib
           ref={carouselRef}
           width={width - 40}
@@ -73,7 +74,7 @@ const Carousel = ({
           autoPlay={autoPlay}
           onSnapToItem={(index) => setCurrentIndex(index)}
           renderItem={({ item }) => (
-            <View className="flex-1 items-center justify-center">
+            <View style={tw`flex-1 items-center justify-center`}>
               {item}
             </View>
           )}
@@ -85,13 +86,13 @@ const Carousel = ({
 }
 
 const CarouselPrevious = ({
-  className,
+  style,
   ...props
 }: React.ComponentProps<typeof Button>) => {
   const { scrollPrev, canScrollPrev } = useCarousel()
   return (
     <Button
-      className={cn("absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8", className)}
+      style={tw`${cn("absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8", style)}`}
       disabled={!canScrollPrev}
       onPress={scrollPrev}
       {...props}
@@ -102,13 +103,13 @@ const CarouselPrevious = ({
 }
 
 const CarouselNext = ({
-  className,
+  style,
   ...props
 }: React.ComponentProps<typeof Button>) => {
   const { scrollNext, canScrollNext } = useCarousel()
   return (
     <Button
-      className={cn("absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8", className)}
+      style={tw`${cn("absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8", style)}`}
       disabled={!canScrollNext}
       onPress={scrollNext}
       {...props}
@@ -125,7 +126,7 @@ const CarouselContent = ({ children }: { children: React.ReactNode }) => (
 )
 
 const CarouselItem = ({ children }: { children: React.ReactNode }) => (
-  <View className="flex-1">{children}</View>
+  <View style={tw`flex-1`}>{children}</View>
 )
 
 export {

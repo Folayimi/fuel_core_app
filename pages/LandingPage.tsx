@@ -3,10 +3,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
 import { Link, useRouter } from "expo-router";
 import {
   BarChart3,
-  Bell,
   Building,
   CreditCard,
   Fuel,
@@ -14,9 +15,11 @@ import {
   Linkedin,
   Mail,
   MapPin,
+  MenuIcon,
   PhoneCall,
   Shield,
   Users,
+  X
 } from "lucide-react-native";
 import { useState } from "react";
 import tw from "twrnc";
@@ -102,7 +105,7 @@ function CarouselReplacement() {
           {/* Button */}
           <TouchableOpacity
             style={tw`bg-blue-600 px-6 py-3 rounded-xl`}
-            // onPress={() => {}}
+          // onPress={() => {}}
           >
             <Text style={tw`text-white text-lg font-bold`}>{buttonText}</Text>
           </TouchableOpacity>
@@ -114,6 +117,7 @@ function CarouselReplacement() {
 
 const LandingPage = () => {
   const router = useRouter();
+  const [showNav, setShowNav] = useState(false)
   const [activeSection, setActiveSection] = useState("home");
   const [formData, setFormData] = useState({
     name: "",
@@ -192,392 +196,348 @@ const LandingPage = () => {
   };
 
   return (
-    <ScrollView style={tw`min-h-screen bg-background`}>
-      {/* Navbar */}
+    <>
       <View
-        style={tw`fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm z-50`}
+
+        style={tw`absolute w-full bg-[#FFFFFF]/95 backdrop-blur-sm z-50`}
       >
-        <View style={tw`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
-          <View style={tw`flex justify-between h-16`}>
-            <View style={tw`flex items-center`}>
+        <BlurView intensity={30} tint="dark" style={tw`w-full border-b-[0.2px] border-gray-300 px-4 flex flex-row justify-between items-center h-16`}>
+          <View style={tw`flex flex-row items-center gap-2`}>
+            <LinearGradient
+              colors={["#21C45D", "#EF7719"]} // from-purple-500 to-pink-500
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={tw`w-8 h-8 rounded-lg bg-gradient-to-r from-blue-800 to-pink-500 flex items-center justify-center`}
+            >
+              <Fuel style={tw`w-5 h-5 text-white`} />
+            </LinearGradient>
+            <Text style={tw`font-bold text-lg`}>FuelCore</Text>
+          </View>
+          <TouchableOpacity style={tw`p-[15px] rounded-[10px]`} onPress={() => {
+            setShowNav(!showNav)
+          }}>
+            {showNav ? <X size={16} /> : <MenuIcon size={20} />}
+          </TouchableOpacity>
+        </BlurView>
+      </View>
+      {/* NavBar */}
+      <View style={tw`${showNav ? 'block' : 'hidden'} z-50 absolute top-[64px] left-0  w-full`}>
+        <View style={tw`transition-all duration-300 flex flex-col p-6 w-full gap-[30px]`}>
+          <Link
+            href="/"
+            style={tw`text-[#6B7280] hover:text-[#21C45D] transition-colors`}
+          >
+            Home
+          </Link>
+          <Link
+            href="/features"
+            style={tw`text-[#6B7280] hover:text-[#21C45D] transition-colors`}
+          >
+            Features
+          </Link>
+          <Link
+            href="/about"
+            style={tw`text-[#6B7280] hover:text-[#21C45D] transition-colors`}
+          >
+            About
+          </Link>
+          <Link
+            href="/contact"
+            style={tw`text-[#6B7280] hover:text-[#21C45D] transition-colors`}
+          >
+            Contact
+          </Link>
+          <View style={tw`flex flex-col w-full gap-[10px]`}>
+            <Button size='sm' variant="outline" asChild textSize={'12px'} className='rounded-[15px]'>
+              <Link href="/login">I'm a Customer</Link>
+            </Button>
+            <Button size='sm' variant="outline" asChild textSize={'12px'} className='rounded-[15px]'>
+              <Link href="/login">I'm a Station</Link>
+            </Button>
+            <Button size='sm' variant="default" asChild textSize={'12px'} className='rounded-[15px]'>
+              <Link href="/login">Login</Link>
+            </Button>
+          </View>
+        </View>
+      </View>
+      <ScrollView contentContainerStyle={{ backgroundColor:'blue' }}>
+        {/* Navbar */}
+
+        {/* Hero Section */}
+        <View style={tw`p-4 bg-white w-full items-center flex flex-col gap-[30px]`}>
+          <View style={tw`rounded-[40px] bg-[#21C45D]/40 p-[10px] flex flex-row justify-center items-center gap-[5px]`}>
+            <Text style={tw`text-[#21C45D]`}>Revolutionary Fuhhhel Platform</Text>
+          </View>
+        </View>
+
+        {/* Features Section */}
+        <View style={tw`py-16`}>
+          <View style={tw`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
+            <Tabs defaultValue="customer" className="space-y-8">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="customer" className="text-center">
+                  <View style={tw`flex flex-col items-center`}>
+                    <Users style={tw`w-6 h-6 mb-2`} />
+                    <Text>For Customers</Text>
+                  </View>
+                </TabsTrigger>
+                <TabsTrigger value="station" className="text-center">
+                  <View style={tw`flex flex-col items-center`}>
+                    <Building style={tw`w-6 h-6 mb-2`} />
+                    <Text>For Stations</Text>
+                  </View>
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="customer">
+                <View
+                  style={tw`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6`}
+                >
+                  {features.customer.map((feature, index) => (
+                    <Card key={index}>
+                      <CardContent style={tw`p-6`}>
+                        <View style={tw`flex flex-col items-center gap-4`}>
+                          <View
+                            style={tw`w-12 h-12 rounded-full bg-gradient-fuel flex items-center justify-center`}
+                          >
+                            {feature.icon}
+                          </View>
+                          <View style={tw`text-center`}>
+                            <Text style={tw`font-semibold`}>{feature.title}</Text>
+                            <Text style={tw`text-[#6B7280]`}>
+                              {feature.description}
+                            </Text>
+                            {feature.link && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                style={tw`mt-4`}
+                              // onPress={() => router.push(feature.link)}
+                              >
+                                Learn More
+                              </Button>
+                            )}
+                          </View>
+                        </View>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </View>
+              </TabsContent>
+
+              <TabsContent value="station">
+                <View
+                  style={tw`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6`}
+                >
+                  {features.station.map((feature, index) => (
+                    <Card key={index}>
+                      <CardContent style={tw`p-6`}>
+                        <View style={tw`flex flex-col items-center gap-4`}>
+                          <View
+                            style={tw`w-12 h-12 rounded-full bg-gradient-fuel flex items-center justify-center`}
+                          >
+                            {feature.icon}
+                          </View>
+                          <View style={tw`text-center`}>
+                            <Text style={tw`font-semibold`}>{feature.title}</Text>
+                            <Text style={tw`text-[#6B7280]`}>
+                              {feature.description}
+                            </Text>
+                            {feature.link && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                style={tw`mt-4`}
+                              // onPress={() => router.push(feature.link)}
+                              >
+                                Learn More
+                              </Button>
+                            )}
+                          </View>
+                        </View>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </View>
+              </TabsContent>
+            </Tabs>
+          </View>
+        </View>
+
+        {/* Contact Section */}
+        <View style={tw`bg-muted/50 py-16`}>
+          <View style={tw`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
+            <View style={tw`grid grid-cols-1 md:grid-cols-2 gap-8`}>
+              {/* Contact Form */}
+              <View>
+                <Text style={tw`text-2xl font-bold mb-4`}>Get in Touch</Text>
+                <View style={tw`space-y-4`}>
+                  <View>
+                    <Label>Name</Label>
+                    <Input
+                      id="name"
+                      placeholder="Your name"
+                      value={formData?.name}
+                      onChangeText={(text) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          name: text,
+                        }))
+                      }
+                    />
+                  </View>
+                  <View>
+                    <Label>Email</Label>
+                    <Input
+                      id="email"
+                      placeholder="your@email.com"
+                      value={formData?.email}
+                      onChangeText={(text) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          email: text,
+                        }))
+                      }
+                    />
+                  </View>
+                  <View>
+                    <Label>Message</Label>
+                    <TextInput
+                      style={tw`w-full rounded-md px-3 py-2 text-sm bg-gray-100 border border-gray-300`}
+                      multiline={true}
+                      numberOfLines={4}
+                      placeholder="How can we help you?"
+                      value={formData.message}
+                      onChangeText={(text) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          message: text,
+                        }))
+                      }
+                    />
+                  </View>
+                  <Button style={tw`w-full`} onPress={handleSubmit}>
+                    Send Message
+                  </Button>
+                </View>
+              </View>
+
+              {/* Contact Info */}
+              <View>
+                <Text style={tw`text-2xl font-bold mb-4`}>Contact Info</Text>
+                <View style={tw`space-y-4`}>
+                  <View style={tw`flex items-center gap-4`}>
+                    <Mail style={tw`w-6 h-6`} />
+                    <View>
+                      <Text style={tw`font-medium`}>Email Us</Text>
+                      <Text style={tw`text-[#6B7280]`}>
+                        contact@fuelcore.com
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={tw`flex items-center gap-4`}>
+                    <PhoneCall style={tw`w-6 h-6`} />
+                    <View>
+                      <Text style={tw`font-medium`}>Call Us</Text>
+                      <Text style={tw`text-[#6B7280]`}>
+                        +234 123 456 789
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={tw`flex items-center gap-4`}>
+                    <Instagram style={tw`w-6 h-6`} />
+                    <View>
+                      <Text style={tw`font-medium`}>Instagram</Text>
+                      <Text style={tw`text-[#6B7280]`}>@fuelcore</Text>
+                    </View>
+                  </View>
+                  <View style={tw`flex items-center gap-4`}>
+                    <Linkedin style={tw`w-6 h-6`} />
+                    <View>
+                      <Text style={tw`font-medium`}>LinkedIn</Text>
+                      <Text style={tw`text-[#6B7280]`}>fuelcore</Text>
+                    </View>
+                  </View>
+                  <View style={tw`mt-6`}>
+                    <Text style={tw`text-lg font-semibold mb-4`}>Follow Us</Text>
+                    <View style={tw`flex gap-4`}>
+                      <Link
+                        href="https://instagram.com/fuelcore"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button variant="outline" size="icon">
+                          <Instagram style={tw`w-5 h-5`} />
+                        </Button>
+                      </Link>
+                      <Link
+                        href="https://linkedin.com/company/fuelcore"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button variant="outline" size="icon">
+                          <Linkedin style={tw`w-5 h-5`} />
+                        </Button>
+                      </Link>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* About Section */}
+        <View style={tw`py-16`}>
+          <View style={tw`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center`}>
+            <Text style={tw`text-2xl font-bold mb-4`}>About FuelCore</Text>
+            <Text style={tw`text-lg text-[#6B7280]`}>
+              FuelCore is a Nigerian-grown innovation redefining how people buy
+              and redeem fuel. Whether you're managing a business fleet, a fuel
+              station, or just your personal vehicle — we've built this for you.
+            </Text>
+          </View>
+        </View>
+
+        {/* Footer */}
+        <View style={tw`bg-gradient-fuel text-white py-12`}>
+          <View style={tw`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
+            <View
+              style={tw`flex flex-col md:flex-row justify-between items-center gap-8`}
+            >
               <View style={tw`flex items-center gap-2`}>
                 <View
-                  style={tw`w-8 h-8 rounded-lg bg-gradient-fuel flex items-center justify-center`}
+                  style={tw`w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center`}
                 >
-                  <Fuel style={tw`w-5 h-5 text-white`} />
+                  <Fuel style={tw`w-5 h-5`} />
                 </View>
-                <Text style={tw`font-bold text-lg`}>FuelCore</Text>
+                <Text>FuelCore</Text>
               </View>
-            </View>
-            <View style={tw`hidden md:flex items-center gap-4`}>
-              <Link
-                href="/features"
-                style={tw`text-muted-foreground hover:text-primary transition-colors`}
-              >
-                Features
-              </Link>
-              <Link
-                href="/about"
-                style={tw`text-muted-foreground hover:text-primary transition-colors`}
-              >
-                About
-              </Link>
-              <Link
-                href="/contact"
-                style={tw`text-muted-foreground hover:text-primary transition-colors`}
-              >
-                Contact
-              </Link>
-              <Button variant="outline" asChild style={tw`text-primary`}>
-                <Link href="/login">Get Started</Link>
-              </Button>
-            </View>
-          </View>
-        </View>
-      </View>
-
-      {/* Hero Section */}
-      <View style={tw`relative py-16 sm:py-24`}>
-        <View style={tw`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
-          <View
-            style={tw`flex flex-col sm:flex-row gap-8 sm:gap-12 items-center justify-center`}
-          >
-            {/* Text Content */}
-            <View style={tw`flex-1 text-center sm:text-left`}>
-              <Text
-                style={tw`text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6`}
-              >
-                Track. Share. Fuel Smarter.
-              </Text>
-              <Text
-                style={tw`text-lg sm:text-xl text-muted-foreground mb-6 sm:mb-8`}
-              >
-                One wallet for fuel — for you and your drivers.
-              </Text>
-              <View
-                style={tw`flex flex-col sm:flex-row gap-6 justify-center sm:justify-start`}
-              >
-                <Button
-                  variant="default"
-                  size="lg"
-                  style={tw`flex-1 sm:flex-none text-primary-foreground hover:bg-primary/90 transition-colors rounded-xl px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1`}
-                  // onPress={() => router.push("/login")}
-                >
-                  <View style={tw`flex items-center gap-4`}>
-                    <Users style={tw`w-6 h-6`} />
-                    <Text>I'm a Customer</Text>
-                  </View>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  style={tw`flex-1 sm:flex-none text-primary hover:bg-primary/5 transition-colors rounded-xl px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1`}
-                  // onPress={() => router.push("/onboarding/station")}
-                >
-                  <View style={tw`flex items-center gap-4`}>
-                    <Building style={tw`w-6 h-6`} />
-                    <Text>I Run a Fuel Station</Text>
-                  </View>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  style={tw`flex-1 sm:flex-none text-primary hover:bg-primary/5 transition-colors rounded-xl px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1`}
-                  // onPress={() => router.push("/beta-test")}
-                >
-                  <View style={tw`flex items-center gap-4`}>
-                    <Bell style={tw`w-6 h-6`} />
-                    <Text>Join Beta Test</Text>
-                  </View>
-                </Button>
+              <View style={tw`flex gap-8`}>
+                <Link href="/about" style={tw`hover:text-white/80`}>
+                  About
+                </Link>
+                <Link href="/terms" style={tw`hover:text-white/80`}>
+                  Terms
+                </Link>
+                <Link href="/privacy" style={tw`hover:text-white/80`}>
+                  Privacy
+                </Link>
+                <Link href="/careers" style={tw`hover:text-white/80`}>
+                  Careers
+                </Link>
               </View>
-            </View>
-
-            {/* Features Carousel */}
-            <View style={tw`flex-1 relative`}>
-              <View
-                style={tw`w-full h-[300px] sm:h-[400px] lg:h-[600px] bg-background rounded-2xl shadow-2xl overflow-hidden`}
-              >
-                <View
-                  style={tw`absolute inset-0 bg-gradient-to-br from-fuel-petrol/10 to-fuel-diesel/10 opacity-30`}
-                />
-                <View style={tw`absolute inset-0 bg-black/10`} />
-                <View style={tw`relative w-full h-full p-4 sm:p-8`}>
-                  <View style={tw`w-full h-full`}>{CarouselReplacement()}</View>
-                </View>
+              <View>
+                <Button // onPress={() => window.open("/beta-test")}
+                >
+                  Beta Test Invite
+                </Button>
               </View>
             </View>
           </View>
         </View>
-      </View>
-
-      {/* Features Section */}
-      <View style={tw`py-16`}>
-        <View style={tw`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
-          <Tabs defaultValue="customer" className="space-y-8">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="customer" className="text-center">
-                <View style={tw`flex flex-col items-center`}>
-                  <Users style={tw`w-6 h-6 mb-2`} />
-                  <Text>For Customers</Text>
-                </View>
-              </TabsTrigger>
-              <TabsTrigger value="station" className="text-center">
-                <View style={tw`flex flex-col items-center`}>
-                  <Building style={tw`w-6 h-6 mb-2`} />
-                  <Text>For Stations</Text>
-                </View>
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="customer">
-              <View
-                style={tw`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6`}
-              >
-                {features.customer.map((feature, index) => (
-                  <Card key={index}>
-                    <CardContent style={tw`p-6`}>
-                      <View style={tw`flex flex-col items-center gap-4`}>
-                        <View
-                          style={tw`w-12 h-12 rounded-full bg-gradient-fuel flex items-center justify-center`}
-                        >
-                          {feature.icon}
-                        </View>
-                        <View style={tw`text-center`}>
-                          <Text style={tw`font-semibold`}>{feature.title}</Text>
-                          <Text style={tw`text-muted-foreground`}>
-                            {feature.description}
-                          </Text>
-                          {feature.link && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              style={tw`mt-4`}
-                              // onPress={() => router.push(feature.link)}
-                            >
-                              Learn More
-                            </Button>
-                          )}
-                        </View>
-                      </View>
-                    </CardContent>
-                  </Card>
-                ))}
-              </View>
-            </TabsContent>
-
-            <TabsContent value="station">
-              <View
-                style={tw`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6`}
-              >
-                {features.station.map((feature, index) => (
-                  <Card key={index}>
-                    <CardContent style={tw`p-6`}>
-                      <View style={tw`flex flex-col items-center gap-4`}>
-                        <View
-                          style={tw`w-12 h-12 rounded-full bg-gradient-fuel flex items-center justify-center`}
-                        >
-                          {feature.icon}
-                        </View>
-                        <View style={tw`text-center`}>
-                          <Text style={tw`font-semibold`}>{feature.title}</Text>
-                          <Text style={tw`text-muted-foreground`}>
-                            {feature.description}
-                          </Text>
-                          {feature.link && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              style={tw`mt-4`}
-                              // onPress={() => router.push(feature.link)}
-                            >
-                              Learn More
-                            </Button>
-                          )}
-                        </View>
-                      </View>
-                    </CardContent>
-                  </Card>
-                ))}
-              </View>
-            </TabsContent>
-          </Tabs>
-        </View>
-      </View>
-
-      {/* Contact Section */}
-      <View style={tw`bg-muted/50 py-16`}>
-        <View style={tw`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
-          <View style={tw`grid grid-cols-1 md:grid-cols-2 gap-8`}>
-            {/* Contact Form */}
-            <View>
-              <Text style={tw`text-2xl font-bold mb-4`}>Get in Touch</Text>
-              <View style={tw`space-y-4`}>
-                <View>
-                  <Label>Name</Label>
-                  <Input
-                    id="name"
-                    placeholder="Your name"
-                    value={formData?.name}
-                    onChangeText={(text) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        name: text,
-                      }))
-                    }
-                  />
-                </View>
-                <View>
-                  <Label>Email</Label>
-                  <Input
-                    id="email"
-                    placeholder="your@email.com"
-                    value={formData?.email}
-                    onChangeText={(text) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        email: text,
-                      }))
-                    }
-                  />
-                </View>   
-                <View>
-                  <Label>Message</Label>
-                  <TextInput
-                    style={tw`w-full rounded-md px-3 py-2 text-sm bg-gray-100 border border-gray-300`}
-                    multiline={true}
-                    numberOfLines={4}
-                    placeholder="How can we help you?"
-                    value={formData.message}
-                    onChangeText={(text) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        message: text,
-                      }))
-                    }
-                  />
-                </View>
-                <Button style={tw`w-full`} onPress={handleSubmit}>
-                  Send Message
-                </Button>
-              </View>
-            </View>
-
-            {/* Contact Info */}
-            <View>
-              <Text style={tw`text-2xl font-bold mb-4`}>Contact Info</Text>
-              <View style={tw`space-y-4`}>
-                <View style={tw`flex items-center gap-4`}>
-                  <Mail style={tw`w-6 h-6`} />
-                  <View>
-                    <Text style={tw`font-medium`}>Email Us</Text>
-                    <Text style={tw`text-muted-foreground`}>
-                      contact@fuelcore.com
-                    </Text>
-                  </View>
-                </View>
-                <View style={tw`flex items-center gap-4`}>
-                  <PhoneCall style={tw`w-6 h-6`} />
-                  <View>
-                    <Text style={tw`font-medium`}>Call Us</Text>
-                    <Text style={tw`text-muted-foreground`}>
-                      +234 123 456 789
-                    </Text>
-                  </View>
-                </View>
-                <View style={tw`flex items-center gap-4`}>
-                  <Instagram style={tw`w-6 h-6`} />
-                  <View>
-                    <Text style={tw`font-medium`}>Instagram</Text>
-                    <Text style={tw`text-muted-foreground`}>@fuelcore</Text>
-                  </View>
-                </View>
-                <View style={tw`flex items-center gap-4`}>
-                  <Linkedin style={tw`w-6 h-6`} />
-                  <View>
-                    <Text style={tw`font-medium`}>LinkedIn</Text>
-                    <Text style={tw`text-muted-foreground`}>fuelcore</Text>
-                  </View>
-                </View>
-                <View style={tw`mt-6`}>
-                  <Text style={tw`text-lg font-semibold mb-4`}>Follow Us</Text>
-                  <View style={tw`flex gap-4`}>
-                    <Link
-                      href="https://instagram.com/fuelcore"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Button variant="outline" size="icon">
-                        <Instagram style={tw`w-5 h-5`} />
-                      </Button>
-                    </Link>
-                    <Link
-                      href="https://linkedin.com/company/fuelcore"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Button variant="outline" size="icon">
-                        <Linkedin style={tw`w-5 h-5`} />
-                      </Button>
-                    </Link>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
-
-      {/* About Section */}
-      <View style={tw`py-16`}>
-        <View style={tw`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center`}>
-          <Text style={tw`text-2xl font-bold mb-4`}>About FuelCore</Text>
-          <Text style={tw`text-lg text-muted-foreground`}>
-            FuelCore is a Nigerian-grown innovation redefining how people buy
-            and redeem fuel. Whether you're managing a business fleet, a fuel
-            station, or just your personal vehicle — we've built this for you.
-          </Text>
-        </View>
-      </View>
-
-      {/* Footer */}
-      <View style={tw`bg-gradient-fuel text-white py-12`}>
-        <View style={tw`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
-          <View
-            style={tw`flex flex-col md:flex-row justify-between items-center gap-8`}
-          >
-            <View style={tw`flex items-center gap-2`}>
-              <View
-                style={tw`w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center`}
-              >
-                <Fuel style={tw`w-5 h-5`} />
-              </View>
-              <Text>FuelCore</Text>
-            </View>
-            <View style={tw`flex gap-8`}>
-              <Link href="/about" style={tw`hover:text-white/80`}>
-                About
-              </Link>
-              <Link href="/terms" style={tw`hover:text-white/80`}>
-                Terms
-              </Link>
-              <Link href="/privacy" style={tw`hover:text-white/80`}>
-                Privacy
-              </Link>
-              <Link href="/careers" style={tw`hover:text-white/80`}>
-                Careers
-              </Link>
-            </View>
-            <View>
-              <Button // onPress={() => window.open("/beta-test")}
-              >
-                Beta Test Invite
-              </Button>
-            </View>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 };
 
