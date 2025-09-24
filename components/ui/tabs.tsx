@@ -68,7 +68,7 @@ const TabsList = React.forwardRef<
     <View
       ref={ref}
       style={tw`${cn(
-        "flex-row h-10 items-center justify-center rounded-md bg-gray-100 p-1",
+        "flex-row h-10 items-center justify-center rounded-xl bg-gray-100 p-1",
         className
       )}`}
       {...props}
@@ -89,7 +89,7 @@ const TabsTrigger = React.forwardRef<
     <TouchableOpacity
       ref={ref}
       style={tw`${cn(
-        "flex-1 items-center justify-center rounded-sm px-3 py-1.5",
+        "flex-1 items-center justify-center rounded-[10px] px-3 py-1.5",
         isActive ? "bg-white shadow-sm" : "",
         className
       )}`}
@@ -98,10 +98,10 @@ const TabsTrigger = React.forwardRef<
       {...props}
     >
       <Text style={tw`${cn(
-        "text-sm font-medium",
-        isActive ? "text-gray-900" : "text-gray-600"
+        "text-[14px] font-medium",
+        isActive ? "text-gray-800" : "text-gray-500"
       )}`}>
-        {children}
+        {children}        
       </Text>
     </TouchableOpacity>
   )

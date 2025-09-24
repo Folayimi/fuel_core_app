@@ -10,7 +10,7 @@ const Card = React.forwardRef<
   <View
     ref={ref}
     style={tw`${cn(
-      "rounded-lg border border-gray-200 bg-white shadow-sm",
+      "rounded-xl border border-gray-200 bg-white shadow-sm",
       className
     )}`}
     {...props}

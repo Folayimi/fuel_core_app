@@ -1,6 +1,7 @@
+import { cn } from "@/lib/utils"
 import React from "react"
 import { Text, TextProps } from "react-native"
-import { cn } from "@/lib/utils"
+import tw from 'twrnc'
 
 type LabelProps = TextProps & {
   disabled?: boolean
@@ -11,11 +12,11 @@ const Label = React.forwardRef<Text, LabelProps>(
     return (
       <Text
         ref={ref}
-        style={cn(
+        style={tw`${cn(
           "text-sm font-medium leading-none",
           disabled && "opacity-70",
           style
-        )}
+        )}`}
         {...props}
       >
         {children}
@@ -27,3 +28,4 @@ const Label = React.forwardRef<Text, LabelProps>(
 Label.displayName = "Label"
 
 export { Label }
+
